@@ -1,0 +1,16 @@
+{
+  "name": "virtual-trading-platform",
+  "version": "1.0.0",
+  "description": "Virtual Trading Platform",
+  "main": "index.js",
+  "scripts": {
+    "setup": "chmod +x install-deps.sh && ./install-deps.sh",
+    "start": "docker-compose up -d && docker-compose exec -T backend npm run init:db",
+    "stop": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "keywords": ["trading", "virtual", "platform"],
+  "author": "Trading Team",
+  "license": "MIT"
+}
