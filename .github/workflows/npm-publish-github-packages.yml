@@ -1,36 +1,30 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
-name: Node.js Package
-
-on:
-  release:
-    types: [created]
+name: Node.js 环境设置
+on: [push, pull_request]
 
 jobs:
-  build:
+  setup-node:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: 环境设置Node.js
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          # 要用的版本规格。示例：12.x，10.15.1，>=10.15.0。
+          node-version: # 可选
+          # 包含该版本的版本规范的文件。示例：package.json、.nvmrc、.node-version、.tool-versions。
+          node-version-file: # 可选
+          # Node 的目标架构。示例：x86，x64。默认会使用系统架构。
+          architecture: # 可选
+          # 如果你想让动作检查符合版本规格的最新可用版本，可以设置这个选项。
+          check-latest: # 可选
+          # 可选注册表用于设置认证。我会把注册表设置在项目级别的 .npmrc 和 .yarnrc 文件中，并设置认证从环境读取。NODE_AUTH_TOKEN。
+          registry-url: # 可选
+          # 可选范围用于对有范围的注册机构进行认证。使用 GitHub Packages 注册表（https://npm.pkg.github.com/）时，会退回到仓库所有者。
+          scope: # 可选
+          # 用于从节点版本中拉取节点分布。由于有默认设置，通常用户不会提供这些信息。在 github.com 上执行该动作时，默认值已足够。在 GHES 运行时，如果你遇到速率限制，可以通过个人访问令牌获得 github.com。
+          token: # 可选，默认为 ${{ github.server_url == 'https://github.com' && GitHub.token || '' }}
+          # 用于在默认目录中指定一个包管理器缓存。支持的值：npm、纱线、pnpm。
+          cache: # 可选
+          # 设置为false以禁用自动缓存。默认情况下，当 devEngines.packageManager 或 package.json 中的顶层 packageManager 字段指定 npm 作为包管理器时，缓存是启用的。
+          package-manager-cache: # 可选，默认为真
+          # 用于指定依赖文件的路径：package-lock.json、yarn.lock 等。支持万用符或文件名列表缓存多个依赖。
+          cache-dependency-path: # 可选
